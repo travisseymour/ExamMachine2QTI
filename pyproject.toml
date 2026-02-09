@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ExamMachine2QTI"
-version = "0.1.4"
+version = "0.1.5"
 authors = [{name = "Travis L. Seymour, PhD", email = "nogard@ucsc.edu"}]
 description = "Convert ExamMachine-style text exams into QTI packages"
 requires-python = ">=3.11"
@@ -24,9 +24,9 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 
-[project.urls]
-"Bug Tracker" = "https://github.com/travisseymour/ExamMachine2QTI/issues"
-"Documentation" = "https://github.com/travisseymour/ExamMachine2QTI#readme"
+#[project.urls]
+#"Bug Tracker" = "https://github.com/travisseymour/ExamMachine2QTI/issues"
+#"Documentation" = "https://github.com/travisseymour/ExamMachine2QTI#readme"
 
 dependencies = [
     "logzero>=1.7,<2",

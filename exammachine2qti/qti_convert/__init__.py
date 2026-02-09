@@ -47,9 +47,7 @@ def qti2docx(qti_zip_file_path: Path, output_file: Path):
                     "question": [],
                 }
 
-                this_assessment_xml = (
-                    this_assessment["id"] + "/" + this_assessment["id"] + ".xml"
-                )
+                this_assessment_xml = this_assessment["id"] + "/" + this_assessment["id"] + ".xml"
 
                 for xml_item in (
                     etree.parse(this_assessment_xml)

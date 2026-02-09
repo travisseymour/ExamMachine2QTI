@@ -18,9 +18,7 @@ def get_answers(xml):
         correct_answer[id.get("respident")] = id.text
 
     try:
-        for xml_response_lid in xml.findall(
-            ".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_lid"
-        ):
+        for xml_response_lid in xml.findall(".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_lid"):
             this_response_lid = {
                 "id": xml_response_lid.get("ident"),
                 "text": xml_response_lid.find(
@@ -42,8 +40,7 @@ def get_answers(xml):
                 this_option["correct"] = (
                     True
                     if this_response_lid["id"] in correct_answer
-                    and correct_answer[this_response_lid["id"]]
-                    == xml_option.get("ident")
+                    and correct_answer[this_response_lid["id"]] == xml_option.get("ident")
                     else False
                 )
                 this_response_lid["options"].append(this_option)

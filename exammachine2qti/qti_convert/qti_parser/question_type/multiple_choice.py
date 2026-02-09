@@ -21,36 +21,24 @@ def get_answers(xml):
         correct_answers.append(id.text)
 
     try:
-        for xml_answer_item in xml.findall(
-            ".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_label"
-        ):
+        for xml_answer_item in xml.findall(".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_label"):
             image = []
             this_answer = {}
             this_answer["id"] = xml_answer_item.get("ident")
             this_answer["text"] = xml_answer_item.find(
                 "{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}material/{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}mattext"
             ).text
-            this_answer["correct"] = (
-                True if xml_answer_item.get("ident") in correct_answers else False
-            )
+            this_answer["correct"] = True if xml_answer_item.get("ident") in correct_answers else False
             this_answer["display"] = True
 
             if this_answer["text"].lower().find("<img.*"):
-                for match in re.finditer(
-                    '^<img src="([^"]+)".*>', this_answer["text"], re.DOTALL
-                ):
+                for match in re.finditer('^<img src="([^"]+)".*>', this_answer["text"], re.DOTALL):
                     image.append(
                         {
                             "id": str(
-                                hashlib.md5(
-                                    match.group(1)
-                                    .replace(config.img_href_ims_base, "")
-                                    .encode()
-                                ).hexdigest()
+                                hashlib.md5(match.group(1).replace(config.img_href_ims_base, "").encode()).hexdigest()
                             ),
-                            "href": match.group(1).replace(
-                                config.img_href_ims_base, ""
-                            ),
+                            "href": match.group(1).replace(config.img_href_ims_base, ""),
                         }
                     )
                 p = re.compile('<img src="([^"]+)".*>')

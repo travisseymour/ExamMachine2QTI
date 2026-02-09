@@ -12,9 +12,7 @@ def get_answers(xml):
     i = 0
 
     try:
-        for xml_answer_item in xml.findall(
-            ".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}varequal"
-        ):
+        for xml_answer_item in xml.findall(".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}varequal"):
             i += 1
             answers.append(
                 {

@@ -159,16 +159,10 @@ def main() -> None:
 
     exam_text = re.sub(r"\| [^\n\r]*", "", exam_text, flags=re.MULTILINE).strip()
 
-    qa_sets = [
-        adjust_qa_set(q, i + 1) for i, q in enumerate(parse_questions(exam_text))
-    ]
+    qa_sets = [adjust_qa_set(q, i + 1) for i, q in enumerate(parse_questions(exam_text))]
 
     output = ""
-    output += (
-        f"Quiz title: {header.title}\n"
-        if header.title
-        else f"Quiz Title: {exam_file.stem}\n"
-    )
+    output += f"Quiz title: {header.title}\n" if header.title else f"Quiz Title: {exam_file.stem}\n"
     if header.subtitle:
         output += f"Quiz description: {header.subtitle}\n"
     output += "\n"

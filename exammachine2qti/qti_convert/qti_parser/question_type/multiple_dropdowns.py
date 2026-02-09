@@ -18,9 +18,7 @@ def get_answers(xml):
         correct_answer[id.get("respident")] = id.text
 
     try:
-        for xml_response_lid in xml.findall(
-            ".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_lid"
-        ):
+        for xml_response_lid in xml.findall(".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_lid"):
             answers = []
 
             for xml_answer_item in xml_response_lid.findall(
@@ -34,16 +32,13 @@ def get_answers(xml):
                 this_answer["correct"] = (
                     True
                     if xml_response_lid.get("ident") in correct_answer
-                    and correct_answer[xml_response_lid.get("ident")]
-                    == this_answer["id"]
+                    and correct_answer[xml_response_lid.get("ident")] == this_answer["id"]
                     else False
                 )
                 this_answer["display"] = True
                 answers.append(this_answer)
 
-            answers_group.append(
-                {"group_id": xml_response_lid.get("ident"), "options": answers}
-            )
+            answers_group.append({"group_id": xml_response_lid.get("ident"), "options": answers})
 
     except OSError as e:
         logger.error("%s", e)

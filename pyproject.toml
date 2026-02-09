@@ -1,8 +1,33 @@
+[build-system]
+requires = [
+  "setuptools>=61.0.0",  # for PEP 621 metadata support (fully pyproject.toml projects only)
+  "wheel"                # any recent wheel
+]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ExamMachine2QTI"
-version = "0.1.3"
+version = "0.1.4"
+authors = [{name = "Travis L. Seymour, PhD", email = "nogard@ucsc.edu"}]
 description = "Convert ExamMachine-style text exams into QTI packages"
 requires-python = ">=3.11"
+license = {text = "GPLv3"}
+readme = "README.md"
+
+keywords = ["utility", "text", "exam", "canvas", "exammachine"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/travisseymour/ExamMachine2QTI/issues"
+"Documentation" = "https://github.com/travisseymour/ExamMachine2QTI#readme"
+
 dependencies = [
     "logzero>=1.7,<2",
     "lxml>=4.9,<6",
@@ -18,3 +43,12 @@ exammachine2qti = "exammachine2qti.main:main"
 dev = [
     "ruff",
 ]
+
+# ==========================
+# Ruff configuration
+# ==========================
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+

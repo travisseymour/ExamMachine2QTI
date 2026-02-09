@@ -18,15 +18,11 @@ def write_file(data, outfile):
 
     for assessment in data["assessment"]:
         doc.add_heading(
-            assessment["metadata"]["title"]
-            if assessment["metadata"]["title"]
-            else "EXAM TITLE",
+            assessment["metadata"]["title"] if assessment["metadata"]["title"] else "EXAM TITLE",
             0,
         )
         html_parser.add_html_to_document(
-            assessment["metadata"]["description"]
-            if assessment["metadata"]["description"]
-            else "EXAM DESCRIPTION",
+            assessment["metadata"]["description"] if assessment["metadata"]["description"] else "EXAM DESCRIPTION",
             doc,
         )
 
@@ -51,24 +47,16 @@ def write_file(data, outfile):
                                     options.append(option["text"])
                                 else:
                                     options.append("---")
-                        doc.add_paragraph(
-                            str(aindex + 1) + ": " + ", ".join(map(str, options))
-                        )
+                        doc.add_paragraph(str(aindex + 1) + ": " + ", ".join(map(str, options)))
                 elif question["question_type"] == "matching_question":
                     table = doc.add_table(rows=1, cols=2)
                     for index, answer in enumerate(question["answer"]):
                         cell_0 = table.cell(0, 0)
                         if "image" in answer:
                             for img in answer["image"]:
-                                cell_0.add_picture(
-                                    img["href"].replace("%20", " "), height=Mm(10)
-                                )
+                                cell_0.add_picture(img["href"].replace("%20", " "), height=Mm(10))
                         if "text" in answer and answer["text"] is not None:
-                            cell_0.text = (
-                                cell_0.text
-                                + ("\n" if cell_0.text != "" else "")
-                                + answer["text"]
-                            )
+                            cell_0.text = cell_0.text + ("\n" if cell_0.text != "" else "") + answer["text"]
                         if index == 0:
                             cell_1 = table.cell(0, 1)
                             for option in answer["options"]:
@@ -79,23 +67,13 @@ def write_file(data, outfile):
                                             height=Mm(10),
                                         )
                                 if "text" in option and option["text"] is not None:
-                                    cell_1.text = (
-                                        cell_1.text
-                                        + ("\n" if cell_1.text != "" else "")
-                                        + option["text"]
-                                    )
+                                    cell_1.text = cell_1.text + ("\n" if cell_1.text != "" else "") + option["text"]
                 elif question["question_type"] == "calculated_question":
                     if config.calculated_display_var_set_in_text:
-                        doc.add_paragraph(
-                            config.blanks_replace_str * config.blanks_answer_n
-                        )
+                        doc.add_paragraph(config.blanks_replace_str * config.blanks_answer_n)
                     else:
                         for index, answer in enumerate(question["answer"]):
-                            if (
-                                answer["display"]
-                                and "text" in answer
-                                and answer["text"] is not None
-                            ):
+                            if answer["display"] and "text" in answer and answer["text"] is not None:
                                 html_parser.add_html_to_document(
                                     "<p>"
                                     + str(index + 1)
@@ -111,21 +89,15 @@ def write_file(data, outfile):
                         if answer["display"]:
                             if "image" in answer:
                                 for img in answer["image"]:
-                                    html_parser.add_html_to_document(
-                                        "<p>" + str(index + 1) + ".</p>", doc
-                                    )
-                                    doc.add_picture(
-                                        img["href"].replace("%20", " "), height=Mm(10)
-                                    )
+                                    html_parser.add_html_to_document("<p>" + str(index + 1) + ".</p>", doc)
+                                    doc.add_picture(img["href"].replace("%20", " "), height=Mm(10))
                             if "text" in answer and answer["text"] is not None:
                                 html_parser.add_html_to_document(
                                     "<p>" + str(index + 1) + ". </p>" + answer["text"],
                                     doc,
                                 )
                         else:
-                            doc.add_paragraph(
-                                config.blanks_replace_str * config.blanks_answer_n
-                            )
+                            doc.add_paragraph(config.blanks_replace_str * config.blanks_answer_n)
 
             # doc.add_page_break()
 

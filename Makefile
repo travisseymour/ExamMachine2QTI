@@ -31,7 +31,6 @@ uninstall:
 format:
 	ruff check exammachine2qti --fix
 	ruff format exammachine2qti
-	black exammachine2qti
 
 build:
 	python -m build

@@ -13,18 +13,10 @@ def get_metadata(file):
     try:
         xml = etree.parse(file).getroot()
         metadata = {
-            "title": xml.find(
-                "./{http://canvas.instructure.com/xsd/cccv1p0}title"
-            ).text,
-            "description": xml.find(
-                "./{http://canvas.instructure.com/xsd/cccv1p0}description"
-            ).text,
-            "type": xml.find(
-                "./{http://canvas.instructure.com/xsd/cccv1p0}quiz_type"
-            ).text,
-            "points_possible": xml.find(
-                "./{http://canvas.instructure.com/xsd/cccv1p0}points_possible"
-            ).text,
+            "title": xml.find("./{http://canvas.instructure.com/xsd/cccv1p0}title").text,
+            "description": xml.find("./{http://canvas.instructure.com/xsd/cccv1p0}description").text,
+            "type": xml.find("./{http://canvas.instructure.com/xsd/cccv1p0}quiz_type").text,
+            "points_possible": xml.find("./{http://canvas.instructure.com/xsd/cccv1p0}points_possible").text,
         }
 
     except OSError as e:

@@ -29,12 +29,8 @@ def get_question(xml_item):
 
     # Try and find images in text to separate them
     if this_question["text"].lower().find("<p>.*<img"):
-        for match in re.finditer(
-            '<p>.*<img.+src="([^"]+)".*>.*</p>', this_question["text"], re.DOTALL
-        ):
-            this_href = re.sub(r"\?.+$", "", match.group(1)).replace(
-                config.img_href_ims_base, ""
-            )
+        for match in re.finditer('<p>.*<img.+src="([^"]+)".*>.*</p>', this_question["text"], re.DOTALL):
+            this_href = re.sub(r"\?.+$", "", match.group(1)).replace(config.img_href_ims_base, "")
             image.append(
                 {
                     "id": str(hashlib.md5(this_href.encode()).hexdigest()),
@@ -47,12 +43,8 @@ def get_question(xml_item):
             this_question["text"] = subn_tuple[0]
 
     elif this_question["text"].lower().find("<img"):
-        for match in re.finditer(
-            '<img.+src="([^"]+)".*>', this_question["text"], re.DOTALL
-        ):
-            this_href = re.sub(r"\?.+$", "", match.group(1)).replace(
-                config.img_href_ims_base, ""
-            )
+        for match in re.finditer('<img.+src="([^"]+)".*>', this_question["text"], re.DOTALL):
+            this_href = re.sub(r"\?.+$", "", match.group(1)).replace(config.img_href_ims_base, "")
             image.append(
                 {
                     "id": str(hashlib.md5(this_href.encode()).hexdigest()),
@@ -77,9 +69,7 @@ def get_question(xml_item):
     elif this_question["question_type"] == "short_answer_question":
         this_question["answer"] = question_type.short_answer.get_answers(xml_item)
     elif this_question["question_type"] == "fill_in_multiple_blanks_question":
-        this_question["answer"] = question_type.fill_in_multiple_blanks.get_answers(
-            xml_item
-        )
+        this_question["answer"] = question_type.fill_in_multiple_blanks.get_answers(xml_item)
     elif this_question["question_type"] == "multiple_dropdowns_question":
         this_question["answer"] = question_type.multiple_dropdowns.get_answers(xml_item)
     elif this_question["question_type"] == "matching_question":
@@ -100,16 +90,12 @@ def get_question(xml_item):
         if subn_tuple[1] > 0:
             this_question["text"] = subn_tuple[0]
         if this_question["question_type"] == "multiple_dropdowns_question":
-            this_question["text"] = question_type.multiple_dropdowns.enumerate_blanks(
-                this_question["text"]
-            )
+            this_question["text"] = question_type.multiple_dropdowns.enumerate_blanks(this_question["text"])
 
     if this_question["question_type"] == "calculated_question":
         if config.calculated_display_var_set_in_text:
-            this_question["text"] = (
-                question_type.calculated.substitute_variables_in_question(
-                    this_question["text"], this_question["answer"][0]
-                )
+            this_question["text"] = question_type.calculated.substitute_variables_in_question(
+                this_question["text"], this_question["answer"][0]
             )
 
     return this_question

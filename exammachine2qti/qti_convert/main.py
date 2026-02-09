@@ -30,16 +30,12 @@ def main(args):
         ):
             this_assessment = {
                 "id": xml_resource.get("identifier"),
-                "metadata": assessment_meta.get_metadata(
-                    xml_resource.get("identifier") + "/" + "assessment_meta.xml"
-                ),
+                "metadata": assessment_meta.get_metadata(xml_resource.get("identifier") + "/" + "assessment_meta.xml"),
                 "question": [],
             }
 
             # TODO: Should be prefixed with PATH part of input filename since paths in XML are relative
-            this_assessment_xml = (
-                this_assessment["id"] + "/" + this_assessment["id"] + ".xml"
-            )
+            this_assessment_xml = this_assessment["id"] + "/" + this_assessment["id"] + ".xml"
 
             for xml_item in (
                 etree.parse(this_assessment_xml)
@@ -82,13 +78,9 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Convert QTI files into other formats.", add_help=False
-    )
+    parser = argparse.ArgumentParser(description="Convert QTI files into other formats.", add_help=False)
     parser.add_argument("input", help="QTI input file (imsmanifest.xml).")
-    parser.add_argument(
-        "-v", action="count", default=0, help="Verbosity (-v, -vv, etc)."
-    )
+    parser.add_argument("-v", action="count", default=0, help="Verbosity (-v, -vv, etc).")
     parser.add_argument(
         "-f",
         action="store",

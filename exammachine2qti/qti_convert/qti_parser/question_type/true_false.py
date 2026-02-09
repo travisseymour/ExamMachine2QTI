@@ -15,18 +15,14 @@ def get_answers(xml):
         correct_answers.append(id.text)
 
     try:
-        for xml_answer_item in xml.findall(
-            ".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_label"
-        ):
+        for xml_answer_item in xml.findall(".//{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}response_label"):
             answers.append(
                 {
                     "id": xml_answer_item.get("ident"),
                     "text": xml_answer_item.find(
                         "{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}material/{http://www.imsglobal.org/xsd/ims_qtiasiv1p2}mattext"
                     ).text,
-                    "correct": True
-                    if xml_answer_item.get("ident") in correct_answers
-                    else False,
+                    "correct": True if xml_answer_item.get("ident") in correct_answers else False,
                     "display": True,
                 }
             )

@@ -6,7 +6,9 @@ import string
 import sys
 from collections import namedtuple
 from pathlib import Path
+from typing import Annotated
 
+import cyclopts
 import logzero
 from text2qti.config import Config
 from text2qti.quiz import Quiz
@@ -15,10 +17,11 @@ from text2qti.qti import QTI
 
 log = logzero.setup_logger(name="EM2QTI_Logger", level=logzero.DEBUG)
 
+app = cyclopts.App()
+
 QUESTIONSET = namedtuple("QuestionSet", "question answers points topic")
 HEADERINFO = namedtuple("HeaderInfo", "title subtitle instructions")
 
-DEFAULT_POINTS = 2
 DEFAULT_TOPIC = "??"
 
 
@@ -50,7 +53,7 @@ def get_header_info(exam_text: str) -> HEADERINFO:
     )
 
 
-def parse_questions(exam_text: str) -> list[QUESTIONSET]:
+def parse_questions(exam_text: str, default_points: float) -> list[QUESTIONSET]:
     q_pattern = re.compile(r"(@ .*[^\$]+)")
     a_pattern = re.compile(r"(\$ .*)+")
     p_pattern = re.compile(r"[ |\|]Points: *([^\|\n\r]+)", re.IGNORECASE)
@@ -71,7 +74,7 @@ def parse_questions(exam_text: str) -> list[QUESTIONSET]:
         points_match = p_pattern.search(text)
         topic_match = t_pattern.search(text)
 
-        points = int(points_match.group(1).strip()) if points_match else DEFAULT_POINTS
+        points = float(points_match.group(1).strip()) if points_match else default_points
         topic = topic_match.group(1).strip() if topic_match else DEFAULT_TOPIC
 
         question = re.sub(r"\n%.*", "", question)
@@ -139,11 +142,14 @@ def txt2qti(source: Path) -> None:
         os.chdir(cwd)
 
 
-def main() -> None:
-    if len(sys.argv) < 2:
-        sys.exit("Usage: exammachine2qti EXAM_FILE.txt")
-
-    exam_file = Path(sys.argv[1]).resolve()
+@app.default
+def main(
+    exam_file: Annotated[Path, cyclopts.Parameter(name="exam_file", help="Path to exam file")],
+    default_points: Annotated[float | None, cyclopts.Parameter(help="Default points per question (default: 100/num_questions)")] = None,
+    zip_only: Annotated[bool, cyclopts.Parameter(help="Only output the QTI zip file, skip intermediate text file")] = False,
+) -> None:
+    """Convert ExamMachine-style text exams into QTI packages."""
+    exam_file = exam_file.resolve()
     if not exam_file.is_file():
         sys.exit(f"{exam_file} is not a file")
 
@@ -159,7 +165,15 @@ def main() -> None:
 
     exam_text = re.sub(r"\| [^\n\r]*", "", exam_text, flags=re.MULTILINE).strip()
 
-    qa_sets = [adjust_qa_set(q, i + 1) for i, q in enumerate(parse_questions(exam_text))]
+    # First pass to count questions for default points calculation
+    raw_questions = parse_questions(exam_text, default_points=0)
+    num_questions = len(raw_questions)
+
+    if default_points is None:
+        default_points = 100.0 / num_questions if num_questions > 0 else 2.0
+
+    # Re-parse with the actual default points
+    qa_sets = [adjust_qa_set(q, i + 1) for i, q in enumerate(parse_questions(exam_text, default_points))]
 
     output = ""
     output += f"Quiz title: {header.title}\n" if header.title else f"Quiz Title: {exam_file.stem}\n"
@@ -175,10 +189,18 @@ def main() -> None:
     output = add_image_paths(output, pic_folder)
 
     out_txt = exam_file.with_name(f"{exam_file.stem}_t2q.txt")
-    out_txt.write_text(output)
 
-    txt2qti(out_txt)
+    if not zip_only:
+        out_txt.write_text(output)
+
+    # Write temp file for txt2qti, then clean up if zip_only
+    if zip_only:
+        out_txt.write_text(output)
+        txt2qti(out_txt)
+        out_txt.unlink()
+    else:
+        txt2qti(out_txt)
 
 
 if __name__ == "__main__":
-    main()
+    app()

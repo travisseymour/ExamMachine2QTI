@@ -7,10 +7,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ExamMachine2QTI"
-version = "0.1.5"
+version = "2026.9.23.1"
 authors = [{name = "Travis L. Seymour, PhD", email = "nogard@ucsc.edu"}]
 description = "Convert ExamMachine-style text exams into QTI packages"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 license = {text = "GPLv3"}
 readme = "README.md"
 
@@ -29,6 +29,7 @@ classifiers = [
 #"Documentation" = "https://github.com/travisseymour/ExamMachine2QTI#readme"
 
 dependencies = [
+    "cyclopts>=3,<4",
     "logzero>=1.7,<2",
     "lxml>=4.9,<6",
     "python-docx>=1.1,<2",

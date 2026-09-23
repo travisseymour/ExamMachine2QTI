@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ExamMachine2QTI"
-version = "2026.9.23.2"
+version = "2026.9.23.3"
 authors = [{name = "Travis L. Seymour, PhD", email = "nogard@ucsc.edu"}]
 description = "Convert ExamMachine-style text exams into QTI packages"
 requires-python = ">=3.11,<3.14"

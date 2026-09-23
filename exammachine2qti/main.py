@@ -182,7 +182,9 @@ def main(
     output += "\n"
 
     for q in qa_sets:
-        output += f"Points: {q.points}\n{q.question}\n"
+        # text2qti only accepts integer points, so round to nearest int
+        points = int(round(q.points))
+        output += f"Points: {points}\n{q.question}\n"
         output += "\n".join(q.answers)
         output += "\n\n"
 
